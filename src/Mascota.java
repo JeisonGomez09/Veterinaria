@@ -86,7 +86,34 @@ public class Mascota {
         }else {
             System.out.println("La mascota ya esta vacunada");
         }
+        return null;
     }
+
+    public void alimentar(double cantidad){
+        if (cantidad>0){
+            setPeso(getPeso()+cantidad);
+            System.out.println("La mascota fue alimentada");
+        }else {
+            System.out.println("No se permiten cantidades negativas");
+        }
+    }
+
+    public Void cumpliraños(){
+        setEdad(getEdad()+1);
+        System.out.println("La mascota cumplio años");
+        return null;
+    }
+
+    public Void info(){
+        System.out.println("-------Informacion de la mascota-------");
+        System.out.println("Nombre: "+getNombre());
+        System.out.println("Especie: "+getEspecie());
+        System.out.println("Edad: *"+getEdad()+"*");
+        System.out.println("Peso: "+getPeso());
+        System.out.println("Vacunado: "+(isVacunado()?"Si":"No"));
+        return null;
+    }
+
 
 
 }
