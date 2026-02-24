@@ -6,7 +6,7 @@ public class Mascota {
     private double peso;
     private boolean vacunado=false;
 
-    public Mascota() {
+    public Mascota(String nombre, String especie, int edad, double peso) {
     }
 
     public Mascota(String nombre, String especie, int edad, double peso, boolean vacunado) {
@@ -98,7 +98,7 @@ public class Mascota {
         }
     }
 
-    public Void cumpliraños(){
+    public Void cumplirAños(){
         setEdad(getEdad()+1);
         System.out.println("La mascota cumplio años");
         return null;
@@ -108,8 +108,8 @@ public class Mascota {
         System.out.println("-------Informacion de la mascota-------");
         System.out.println("Nombre: "+getNombre());
         System.out.println("Especie: "+getEspecie());
-        System.out.println("Edad: *"+getEdad()+"*");
-        System.out.println("Peso: "+getPeso());
+        System.out.println("Edad: *"+getEdad()+"* Años");
+        System.out.println("Peso: "+getPeso()+"Kg");
         System.out.println("Vacunado: "+(isVacunado()?"Si":"No"));
         return null;
     }
