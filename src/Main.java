@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -13,15 +14,16 @@ public class Main {
         String nombre = sc.nextLine();
         System.out.println("Ingrese especie");
         String especie = sc.nextLine();
-        System.out.println("Ingrese edad (años): ");
-        int edad = Integer.parseInt(sc.nextLine());
+        System.out.println("Ingrese fecha de nacimiento (AAAA-MM-DD): ");
+        String fecha=sc.nextLine();
+        LocalDate fetchoneNascimento=LocalDate.parse(fecha);
         System.out.println("Ingrese peso (Kg)");
         double peso = Double.parseDouble(sc.nextLine());
 
-        Mascota mascota = new Mascota(nombre, especie, edad, peso);
+        Mascota mascota = new Mascota(nombre, especie, fetchoneNascimento, peso);
         mascota.setNombre(nombre);
         mascota.setEspecie(especie);
-        mascota.setEdad(edad);
+        mascota.setFechaDeNacimiento(fetchoneNascimento);
         mascota.setPeso(peso);
 
         int op;
@@ -31,8 +33,7 @@ public class Main {
             System.out.println("1-       Mostrar informacion");
             System.out.println("2-                 Alimentar");
             System.out.println("3-                   Vacunar");
-            System.out.println("4-              Cumplir años");
-            System.out.println("5- Mostrar informacion final");
+            System.out.println("4- Mostrar informacion final");
             System.out.println("*Seleccione una opcion*");
 
         op =sc.nextInt();
@@ -43,7 +44,7 @@ public class Main {
                 break;
 
             case 2:
-                System.out.println("Ingrese la cantidad de alimento: ");
+                System.out.println("Ingrese la cantidad de alimento en gramos (maximo el 10% del peso actual de la mascota): ");
                 double cantidad=sc.nextDouble();
                 mascota.alimentar(cantidad);
                 break;
@@ -53,10 +54,6 @@ public class Main {
                 break;
 
             case 4:
-                mascota.cumplirAños();
-                break;
-
-            case 5:
                 System.out.println("Informacion final:");
                 mascota.info();
                 System.out.println("❤\uFE0F Gracias por confiar en nuestro servicio");
@@ -66,7 +63,7 @@ public class Main {
             default:
                 System.out.println("***Opcion invalida***");
         }
-        }while (op!=5);
+        }while (op!=4);
         sc.close();
     }
 }

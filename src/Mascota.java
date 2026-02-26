@@ -1,18 +1,21 @@
+import java.time.LocalDate;
+import java.time.Period;
+
 public class Mascota {
 
     private String nombre;
     private String especie;
-    private int edad;
+    private LocalDate fechaDeNacimiento;
     private double peso;
     private boolean vacunado=false;
 
-    public Mascota(String nombre, String especie, int edad, double peso) {
+    public Mascota(String nombre, String especie, LocalDate edad, double peso) {
     }
 
-    public Mascota(String nombre, String especie, int edad, double peso, boolean vacunado) {
+    public Mascota(String nombre, String especie, LocalDate fechaDeNacimiento, double peso, boolean vacunado) {
         this.nombre = nombre;
         this.especie = especie;
-        this.edad = edad;
+        this.fechaDeNacimiento = fechaDeNacimiento;
         this.peso = peso;
         this.vacunado = vacunado;
     }
@@ -34,16 +37,15 @@ public class Mascota {
     }
 
     public int getEdad() {
-        if (edad>=0){
-            this.edad=edad;
-        }else {
-            System.out.println("La edad no puede ser negativa");
-        }
-        return edad;
+        return Period.between(this.fechaDeNacimiento, LocalDate.now()).getYears();
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
+    public void setFechaDeNacimiento(LocalDate fechaDeNacimiento) {
+        if (fechaDeNacimiento.isAfter(LocalDate.now())){
+            System.out.println("La fecha no puede ser futura");
+            return;
+        }
+        this.fechaDeNacimiento = fechaDeNacimiento;
     }
 
     public double getPeso() {
@@ -73,7 +75,7 @@ public class Mascota {
         return "Mascota{" +
                 "nombre='" + nombre + '\'' +
                 ", especie='" + especie + '\'' +
-                ", edad=" + edad +
+                ", fechaDeNacimiento=" + fechaDeNacimiento +
                 ", peso=" + peso +
                 ", vacunado=" + vacunado +
                 '}';
@@ -90,24 +92,32 @@ public class Mascota {
     }
 
     public void alimentar(double cantidad){
-        if (cantidad>0){
-            setPeso(getPeso()+cantidad);
-            System.out.println("La mascota fue alimentada");
-        }else {
-            System.out.println("No se permiten cantidades negativas");
+        if (cantidad<=0){
+            System.out.println("*Cantidad no permitida, no puede ser negativa ni cero*");
+            return;
         }
-    }
 
-    public Void cumplirAños(){
-        setEdad(getEdad()+1);
-        System.out.println("La mascota cumplio años");
-        return null;
+        double kilos=cantidad/1000;
+
+        double cantidadmax=this.peso*0.10;
+
+        if (kilos>cantidadmax){
+            System.out.println("Demasiada comida para una sola vez.");
+            System.out.println("Maximo de comida permitida: "+(cantidadmax*1000)+"gramos.");
+            return;
+        }
+
+        this.peso += kilos;
+
+        System.out.println("Mascota alimentada correctamente \uD83D\uDC3E");
+        System.out.println("Nuevo peso: "+String.format("%.2f",this.peso)+" Kg");
     }
 
     public Void info(){
         System.out.println("-------Informacion de la mascota-------");
         System.out.println("Nombre: "+getNombre());
         System.out.println("Especie: "+getEspecie());
+        System.out.println("Fecha de nacimiento: "+this.fechaDeNacimiento);
         System.out.println("Edad: *"+getEdad()+"* Años");
         System.out.println("Peso: "+getPeso()+"Kg");
         System.out.println("Vacunado: "+(isVacunado()?"Si":"No"));
