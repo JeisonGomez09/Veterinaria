@@ -6,18 +6,19 @@ public class Mascota {
     private String nombre;
     private String especie;
     private LocalDate fechaDeNacimiento;
-    private double peso;
-    private boolean vacunado=false;
-
-    public Mascota(String nombre, String especie, LocalDate edad, double peso) {
-    }
+    private double peso;       // en KG
+    private boolean vacunado;
 
     public Mascota(String nombre, String especie, LocalDate fechaDeNacimiento, double peso, boolean vacunado) {
         this.nombre = nombre;
         this.especie = especie;
-        this.fechaDeNacimiento = fechaDeNacimiento;
-        this.peso = peso;
+        setFechaDeNacimiento(fechaDeNacimiento); // valida
+        setPeso(peso);                           // valida
         this.vacunado = vacunado;
+    }
+
+    public Mascota(String nombre, String especie, LocalDate fechaDeNacimiento, double peso) {
+        this(nombre, especie, fechaDeNacimiento, peso, false);
     }
 
     public String getNombre() {
@@ -36,29 +37,36 @@ public class Mascota {
         this.especie = especie;
     }
 
+    public LocalDate getFechaDeNacimiento() {
+        return fechaDeNacimiento;
+    }
+
     public int getEdad() {
+        if (this.fechaDeNacimiento == null) return 0;
         return Period.between(this.fechaDeNacimiento, LocalDate.now()).getYears();
     }
 
     public void setFechaDeNacimiento(LocalDate fechaDeNacimiento) {
-        if (fechaDeNacimiento.isAfter(LocalDate.now())){
-            System.out.println("La fecha no puede ser futura");
+        if (fechaDeNacimiento == null) {
+            System.out.println("La fecha no puede ser nula.");
+            return;
+        }
+        if (fechaDeNacimiento.isAfter(LocalDate.now())) {
+            System.out.println("La fecha no puede ser futura.");
             return;
         }
         this.fechaDeNacimiento = fechaDeNacimiento;
     }
 
     public double getPeso() {
-        if (peso>0){
-            this.peso=peso;
-            return peso;
-        }else {
-            System.out.println("");
-        }
         return peso;
     }
 
     public void setPeso(double peso) {
+        if (peso <= 0) {
+            System.out.println("El peso debe ser mayor que 0.");
+            return;
+        }
         this.peso = peso;
     }
 
@@ -76,54 +84,49 @@ public class Mascota {
                 "nombre='" + nombre + '\'' +
                 ", especie='" + especie + '\'' +
                 ", fechaDeNacimiento=" + fechaDeNacimiento +
-                ", peso=" + peso +
+                ", peso=" + String.format("%.2f", peso) + " Kg" +
                 ", vacunado=" + vacunado +
                 '}';
     }
 
-    public Void vacunar(){
-        if (!isVacunado()){
-            setVacunado(true);
-            System.out.println("La mascota ha sido vacunada");
-        }else {
-            System.out.println("La mascota ya esta vacunada");
+    public void vacunar() {
+        if (!vacunado) {
+            vacunado = true;
+            System.out.println("La mascota ha sido vacunada ✅");
+        } else {
+            System.out.println("La mascota ya está vacunada ✅");
         }
-        return null;
     }
 
-    public void alimentar(double cantidad){
-        if (cantidad<=0){
+    public void alimentar(double cantidadGramos) {
+        if (cantidadGramos <= 0) {
             System.out.println("*Cantidad no permitida, no puede ser negativa ni cero*");
             return;
         }
 
-        double kilos=cantidad/1000;
+        double kilosAumentar = cantidadGramos / 1000.0;
 
-        double cantidadmax=this.peso*0.10;
+        double maxPermitidoKg = this.peso * 0.10;
 
-        if (kilos>cantidadmax){
+        if (kilosAumentar > maxPermitidoKg) {
             System.out.println("Demasiada comida para una sola vez.");
-            System.out.println("Maximo de comida permitida: "+(cantidadmax*1000)+"gramos.");
+            System.out.println("Máximo permitido: " + String.format("%.0f", maxPermitidoKg * 1000) + " gramos.");
             return;
         }
 
-        this.peso += kilos;
+        this.peso += kilosAumentar;
 
-        System.out.println("Mascota alimentada correctamente \uD83D\uDC3E");
-        System.out.println("Nuevo peso: "+String.format("%.2f",this.peso)+" Kg");
+        System.out.println("Mascota alimentada correctamente 🐾");
+        System.out.println("Nuevo peso: " + String.format("%.2f", this.peso) + " Kg");
     }
 
-    public Void info(){
-        System.out.println("-------Informacion de la mascota-------");
-        System.out.println("Nombre: "+getNombre());
-        System.out.println("Especie: "+getEspecie());
-        System.out.println("Fecha de nacimiento: "+this.fechaDeNacimiento);
-        System.out.println("Edad: *"+getEdad()+"* Años");
-        System.out.println("Peso: "+getPeso()+"Kg");
-        System.out.println("Vacunado: "+(isVacunado()?"Si":"No"));
-        return null;
+    public void info() {
+        System.out.println("------- Información de la mascota -------");
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Especie: " + especie);
+        System.out.println("Fecha de nacimiento: " + fechaDeNacimiento);
+        System.out.println("Edad: " + getEdad() + " años");
+        System.out.println("Peso: " + String.format("%.2f", peso) + " Kg");
+        System.out.println("Vacunado: " + (vacunado ? "Sí" : "No"));
     }
-
-
-
 }

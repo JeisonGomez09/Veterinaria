@@ -1,69 +1,162 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
 
+        ArrayList<Mascota> lstmascotas = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
-
-        //Busque la forma de poner un par de emojis de forma decorativa
-        System.out.println("\uD83D\uDC36\uD83D\uDC31Bienvenido a su veterinaria de confianza\uD83D\uDC3E");
-        System.out.println("Ingrese nombre de su mascota: ");
-        String nombre = sc.nextLine();
-        System.out.println("Ingrese especie");
-        String especie = sc.nextLine();
-        System.out.println("Ingrese fecha de nacimiento (AAAA-MM-DD): ");
-        String fecha=sc.nextLine();
-        LocalDate fetchoneNascimento=LocalDate.parse(fecha);
-        System.out.println("Ingrese peso (Kg)");
-        double peso = Double.parseDouble(sc.nextLine());
-
-        Mascota mascota = new Mascota(nombre, especie, fetchoneNascimento, peso);
-        mascota.setNombre(nombre);
-        mascota.setEspecie(especie);
-        mascota.setFechaDeNacimiento(fetchoneNascimento);
-        mascota.setPeso(peso);
 
         int op;
 
         do {
-            System.out.println("\n-----Menu veterinaria-----");
-            System.out.println("1-       Mostrar informacion");
-            System.out.println("2-                 Alimentar");
-            System.out.println("3-                   Vacunar");
-            System.out.println("4- Mostrar informacion final");
-            System.out.println("*Seleccione una opcion*");
+            System.out.println("\n🐶🐱 ----- MENÚ VETERINARIA ----- 🐾");
+            System.out.println("1. Crear mascotas");
+            System.out.println("2. Mostrar mascotas");
+            System.out.println("3. Buscar mascotas");
+            System.out.println("4. Finalizar");
+            System.out.print("Seleccione una opcion: ");
 
-        op =sc.nextInt();
+            // Leer opción y limpiar buffer
+            while (!sc.hasNextInt()) {
+                System.out.print("Ingrese un número válido: ");
+                sc.nextLine();
+            }
+            op = sc.nextInt();
+            sc.nextLine(); // ✅ Limpia el Enter pendiente
 
-        switch (op){
-            case 1:
-                mascota.info();
-                break;
+            switch (op) {
 
-            case 2:
-                System.out.println("Ingrese la cantidad de alimento en gramos (maximo el 10% del peso actual de la mascota): ");
-                double cantidad=sc.nextDouble();
-                mascota.alimentar(cantidad);
-                break;
+                case 1:
+                    System.out.println("\n--- Crear mascota ---");
 
-            case 3:
-                mascota.vacunar();
-                break;
+                    System.out.print("Nombre: ");
+                    String nombre = sc.nextLine().trim();
 
-            case 4:
-                System.out.println("Informacion final:");
-                mascota.info();
-                System.out.println("❤\uFE0F Gracias por confiar en nuestro servicio");
-                System.out.println("\uD83D\uDC3E ¡Hasta la próxima consulta! \uD83D\uDC3E");
-                break;
+                    System.out.print("Especie: ");
+                    String especie = sc.nextLine().trim();
 
-            default:
-                System.out.println("***Opcion invalida***");
-        }
-        }while (op!=4);
+                    // Fecha válida
+                    LocalDate fechaNacimiento = null;
+                    while (fechaNacimiento == null) {
+                        System.out.print("Fecha de nacimiento (AAAA-MM-DD): ");
+                        String fechaStr = sc.nextLine().trim();
+                        try {
+                            fechaNacimiento = LocalDate.parse(fechaStr);
+                        } catch (Exception e) {
+                            System.out.println("⚠ Formato inválido. Ej: 2024-08-10");
+                        }
+                    }
+
+                    // Peso válido
+                    Double peso = null;
+                    while (peso == null) {
+                        System.out.print("Peso (Kg): ");
+                        String pesoStr = sc.nextLine().trim();
+                        try {
+                            peso = Double.parseDouble(pesoStr);
+                            if (peso <= 0) {
+                                System.out.println("⚠ El peso debe ser mayor que 0.");
+                                peso = null;
+                            }
+                        } catch (Exception e) {
+                            System.out.println("⚠ Ingrese un número válido (ej: 5.2)");
+                        }
+                    }
+
+                    // ✅ Crear y guardar
+                    Mascota nuevaMascota = new Mascota(nombre, especie, fechaNacimiento, peso);
+                    lstmascotas.add(nuevaMascota);
+
+                    System.out.println("✅ Mascota registrada correctamente 🐾");
+                    break;
+
+                case 2:
+                    System.out.println("\n--- Lista de mascotas ---");
+                    if (lstmascotas.isEmpty()) {
+                        System.out.println("No hay mascotas registradas.");
+                    } else {
+                        for (Mascota m : lstmascotas) { // ✅ FOR-EACH correcto
+                            System.out.println(m);
+                        }
+                    }
+                    break;
+
+                case 3:
+                    if (lstmascotas.isEmpty()) {
+                        System.out.println("No hay mascotas registradas.");
+                        break;
+                    }
+
+                    System.out.print("Ingrese el nombre de la mascota a buscar: ");
+                    String nombreBuscar = sc.nextLine();
+
+                    Mascota mascotaEncontrada = null;
+
+                    for (Mascota m : lstmascotas) {
+                        if (m.getNombre().equalsIgnoreCase(nombreBuscar)) {
+                            mascotaEncontrada = m;
+                            break;
+                        }
+                    }
+
+                    if (mascotaEncontrada == null) {
+                        System.out.println("No se encontró la mascota.");
+                        break;
+                    }
+
+                    int subOp;
+                    do {
+                        System.out.println("\n🐾 Mascota encontrada: " + mascotaEncontrada.getNombre());
+                        System.out.println("1. Ver información");
+                        System.out.println("2. Alimentar");
+                        System.out.println("3. Vacunar");
+                        System.out.println("4. Volver al menú principal");
+                        System.out.print("Seleccione una opción: ");
+
+                        subOp = sc.nextInt();
+                        sc.nextLine(); // limpiar buffer
+
+                        switch (subOp) {
+                            case 1:
+                                mascotaEncontrada.info();
+                                break;
+
+                            case 2:
+                                System.out.print("Ingrese cantidad de alimento en gramos: ");
+                                double cantidad = sc.nextDouble();
+                                sc.nextLine(); // limpiar buffer
+                                mascotaEncontrada.alimentar(cantidad);
+                                break;
+
+                            case 3:
+                                mascotaEncontrada.vacunar();
+                                break;
+
+                            case 4:
+                                System.out.println("Volviendo al menú principal...");
+                                break;
+
+                            default:
+                                System.out.println("Opción inválida.");
+                        }
+
+                    } while (subOp != 4);
+
+                    break;
+
+                case 4:
+                    System.out.println("\n👋 Gracias por confiar en nuestro servicio.");
+                    System.out.println("🐾 ¡Hasta la próxima consulta! 🐾");
+                    break;
+
+                default:
+                    System.out.println("❌ Opcion invalida.");
+            }
+
+        } while (op != 4);
+
         sc.close();
     }
 }
